@@ -61,21 +61,26 @@ def outputBPG(err,w,bias,deltaW,deltaBias):
 
 def hiddenBPG(gradientOutput,w,bias,deltaW,deltaBias):
     wHiddenOld = np.copy(w)
-    gradientHidden = []
     s=[]
     dAc = dActivationfuction(x)
 
+    for i in range(hiddenNode):
+        tmp=[]
+        for j in range(outputNode):
+            tmp.append(wOutputOld[j][i])
+        s.append(tmp)
+
+    sigma=[]
 
     for k in range(gradientOutput.__len__()):
+        tmp=[]
         for i in range(hiddenNode):
-            tmp=[]
-            for j in range(outputNode):
-                tmp.append(wOutputOld[j][i])
-            s.append(tmp)
+            tmp.append(sum(s[i] * gradientOutput[k]))
+        sigma.append(tmp)
 
-        gradientHidden.append(dAc[k]*(sum(s[k] * gradientOutput[k])))
-
+    gradientHidden=dAc*sigma
     gradientHidden=np.asarray(gradientHidden)
+
 
     for i in range(input.__len__()):
         for j in range(hiddenNode):
@@ -85,7 +90,7 @@ def hiddenBPG(gradientOutput,w,bias,deltaW,deltaBias):
             bias += (gradientHidden[i][j] * lr) + (alpha*deltaBias)
             deltaBias = (gradientHidden[i][j] * lr) + (alpha*deltaBias)
 
-    return wOutputOld,gradientOutput,deltaW,deltaBias
+    return wHiddenOld,gradientHidden,deltaW,deltaBias
 
 def flood_data():
     text_file = open("flooddataset", "r")
@@ -144,17 +149,18 @@ def cross_pat():
 
     return input , dOutput
 
-alpha=0.2
+alpha=0.1
 lr=0.1
 layers=2
 hiddenNode=3
-outputNode=1
+outputNode=2
 wHidden=[]
 wOutput=[]
 biasHidden=[]
 biasOutput=[]
 
-input,dOutput = flood_data()
+input,dOutput = cross_pat()
+
 dOutput= dOutput.reshape(input.__len__(),outputNode)
 print("input :",input.shape)
 print("output :",dOutput.shape)
@@ -163,9 +169,9 @@ tmp=[]
 for i in range(hiddenNode):
     tmp=[]
     for j in range(input[0].__len__()):
-        tmp.append(random.random())
+        tmp.append(random.uniform(-1, 1))
     wHidden.append(tmp)
-    biasHidden.append(random.random())
+    biasHidden.append(random.uniform(-1, 1))
 
 print("HiddenNode :",wHidden.__len__())
 print("BiasHiddenNode :",biasHidden.__len__())
@@ -173,9 +179,9 @@ print("BiasHiddenNode :",biasHidden.__len__())
 for i in range(outputNode):
     tmp=[]
     for j in range(hiddenNode):
-        tmp.append(random.random())
+        tmp.append(random.uniform(-1, 1))
     wOutput.append(tmp)
-    biasOutput.append(random.random())
+    biasOutput.append(random.uniform(-1, 1))
 wHidden=np.asarray(wHidden)
 wOutput=np.asarray(wOutput)
 
@@ -208,12 +214,11 @@ for i in range(hiddenNode):
 deltaWHidden=np.asarray(deltaWHidden)
 deltaBiasHidden=np.asarray(deltaBiasHidden)
 
-for i in range(1):
+for i in range(100):
 
     x = feedfoward(input, wHidden, biasHidden, hiddenNode)
     y = feedfoward(x, wOutput, biasOutput, outputNode)
-
-    # print(dOutput[0],y[0])
+    print(y[0])
     err = dOutput - y
 
     wOutputOld, gradientOutput, deltaWOutput, deltaBiasOutput = outputBPG(
@@ -221,3 +226,4 @@ for i in range(1):
 
     wHiddenOld, gradientHidden, deltaWHidden, deltaBiasHidden = hiddenBPG(
         gradientOutput, wHidden, biasHidden,deltaWHidden, deltaBiasHidden)
+
