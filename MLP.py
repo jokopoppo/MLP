@@ -32,65 +32,119 @@ def produce(input,w,bias):
 
 def feedfoward(input,w,bias,node):
     y = []
-    for i in range(input.__len__()):
-        tmp=[]
-        for j in range(node):
-            tmp.append(produce(input[i], w[j], bias[j]))
 
-        if(node==1):
-            y.append(tmp[0])
-        else:
-            y.append(tmp)
+    # for i in range(input.__len__()):
+    #     tmp=[]
+    #     for j in range(node):
+    #         tmp.append(produce(input[i], w[j], bias[j]))
+    #
+    #     if(node==1):
+    #         y.append(tmp[0])
+    #     else:
+    #         y.append(tmp)
+    #
+    # y = np.asarray(y)
+
+    for i in range(node):
+        y.append(produce(input, w[i], bias[i]))
 
     y = np.asarray(y)
+
     return y
 
 def outputBPG(err,w,bias,deltaW,deltaBias):
-    wOutputOld = np.copy(w)
+
     gradientOutput = (-err * dActivationfuction(y))
+    wOutputOld = []
 
     for i in range(x.__len__()):
-        for j in range(outputNode):
-            w += (gradientOutput[i][j] * x[i] * lr) + (alpha*deltaW)
-            deltaW = (gradientOutput[i][j] * x[i] * lr) + (alpha*deltaW)
+        wOutputOld.append(w.copy())
 
-            bias += (gradientOutput[i][j] * lr) + (alpha*deltaBias)
-            deltaBias = (gradientOutput[i][j] * lr) + (alpha*deltaBias)
+        for j in range(outputNode):
+            w[j] += (gradientOutput[i][j] * x[i] * lr) + (alpha*deltaW[j])
+            deltaW[j] = (gradientOutput[i][j] * x[i] * lr) + (alpha*deltaW[j])
+
+            bias[j] += (gradientOutput[i][j] * lr) + (alpha*deltaBias[j])
+            deltaBias[j] = (gradientOutput[i][j] * lr) + (alpha*deltaBias[j])
+
+    wOutputOld=np.asarray(wOutputOld)
 
     return wOutputOld,gradientOutput,deltaW,deltaBias
 
 def hiddenBPG(gradientOutput,w,bias,deltaW,deltaBias):
-    wHiddenOld = np.copy(w)
-    s=[]
     dAc = dActivationfuction(x)
+    s = []
 
-    for i in range(hiddenNode):
-        tmp=[]
-        for j in range(outputNode):
-            tmp.append(wOutputOld[j][i])
-        s.append(tmp)
+    for k in range(wOutputOld.__len__()):
+        s.append([])
+        for i in range(hiddenNode):
+            tmp=[]
+            for j in range(outputNode):
+                tmp.append(wOutputOld[k][j][i])
+            s[-1].append(tmp)
 
     sigma=[]
 
     for k in range(gradientOutput.__len__()):
         tmp=[]
         for i in range(hiddenNode):
-            tmp.append(sum(s[i] * gradientOutput[k]))
+            tmp.append(sum(s[k][i] * gradientOutput[k]))
+
         sigma.append(tmp)
 
     gradientHidden=dAc*sigma
     gradientHidden=np.asarray(gradientHidden)
 
-
     for i in range(input.__len__()):
         for j in range(hiddenNode):
-            w += (gradientHidden[i][j] * input[i] * lr) + (alpha*deltaW)
-            deltaW = (gradientHidden[i][j] * input[i] * lr) + (alpha*deltaW)
+            w[j] += (gradientHidden[i][j] * input[i] * lr) + (alpha*deltaW[j])
+            deltaW[j] = (gradientHidden[i][j] * input[i] * lr) + (alpha*deltaW[j])
 
-            bias += (gradientHidden[i][j] * lr) + (alpha*deltaBias)
-            deltaBias = (gradientHidden[i][j] * lr) + (alpha*deltaBias)
+            bias[j] += (gradientHidden[i][j] * lr) + (alpha*deltaBias[j])
+            deltaBias[j] = (gradientHidden[i][j] * lr) + (alpha*deltaBias[j])
 
-    return wHiddenOld,gradientHidden,deltaW,deltaBias
+    return gradientHidden,deltaW,deltaBias
+
+def bpg(err,wOutput,deltaWOutput,deltaBiasOutput,wHidden,deltaWHidden,deltaBiasHidden,input):
+
+    gradientOutput = (err * dActivationfuction(y))
+    wOutputOld = wOutput.copy()
+
+    # print("1",wOutput)
+    # print("2",gradientOutput)
+    # print("3",x)
+    # print("4",deltaWOutput)
+    # print("5",biasOutput)
+
+    for i in range(gradientOutput.__len__()):
+        wOutput[i] += (gradientOutput[i] * x * lr) + (alpha * deltaWOutput[i])
+        deltaWOutput[i] = (gradientOutput[i] * x * lr) + (alpha * deltaWOutput[i])
+
+        biasOutput[i] += (gradientOutput[i] * lr) + (alpha * deltaBiasOutput[i])
+        deltaBiasOutput[i] = (gradientOutput[i] * lr) + (alpha * deltaBiasOutput[i])
+
+    # print(wOutput)
+
+    dAc = dActivationfuction(x)
+    sigma=[]
+
+    for i in range(hiddenNode):
+        tmp=[]
+        for j in range(outputNode):
+            tmp.append(wOutputOld[j][i]*gradientOutput[j])
+        sigma.append(sum(tmp))
+
+    gradientHidden = dAc*sigma
+
+    for i in range(gradientHidden.__len__()):
+        wHidden[i] += (gradientHidden[i] * input * lr) + (alpha * deltaWHidden[i])
+        deltaWHidden[i] = (gradientHidden[i] * input * lr) + (alpha * deltaWHidden[i])
+
+        biasHidden[i] += (gradientHidden[i] * lr) + (alpha * deltaBiasHidden[i])
+        deltaBiasHidden[i] = (gradientHidden[i] * lr) + (alpha * deltaBiasHidden[i])
+
+
+    return wOutput,wHidden,deltaWOutput,deltaWHidden
 
 def flood_data():
     text_file = open("flooddataset", "r")
@@ -116,7 +170,7 @@ def flood_data():
     input = np.asarray(input)
     dOutput = np.asarray(dOutput)
 
-    return input,dOutput
+    return input,dOutput,1
 
 def cross_pat():
     text_file = open("cross.pat", "r")
@@ -147,21 +201,38 @@ def cross_pat():
     input = np.asarray(input)
     dOutput = np.asarray(dOutput)
 
-    return input , dOutput
+    return input , dOutput , 2
+
+def flood_acc(y,dOutput):
+    mse = ((dOutput - y) ** 2).mean(axis=None)
+
+    return mse
+
+def cross_acc(y,dOutput):
+
+    tmp=[]
+    if(y[0]>y[1]):
+        tmp=[1.0,0.0]
+    elif(y[0]<y[1]):
+        tmp=[0.0,1.0]
+
+    if(np.array_equal(dOutput,tmp)):
+        return 1
+    else:
+        return 0
 
 alpha=0.1
 lr=0.1
 layers=2
 hiddenNode=3
-outputNode=2
 wHidden=[]
 wOutput=[]
 biasHidden=[]
 biasOutput=[]
 
-input,dOutput = cross_pat()
+input,dOutput , outputNode = flood_data()
 
-dOutput= dOutput.reshape(input.__len__(),outputNode)
+# dOutput= dOutput.reshape(input.__len__(),outputNode)
 print("input :",input.shape)
 print("output :",dOutput.shape)
 
@@ -169,9 +240,9 @@ tmp=[]
 for i in range(hiddenNode):
     tmp=[]
     for j in range(input[0].__len__()):
-        tmp.append(random.uniform(-1, 1))
+        tmp.append(1.0)
     wHidden.append(tmp)
-    biasHidden.append(random.uniform(-1, 1))
+    biasHidden.append(1.0)
 
 print("HiddenNode :",wHidden.__len__())
 print("BiasHiddenNode :",biasHidden.__len__())
@@ -179,9 +250,9 @@ print("BiasHiddenNode :",biasHidden.__len__())
 for i in range(outputNode):
     tmp=[]
     for j in range(hiddenNode):
-        tmp.append(random.uniform(-1, 1))
+        tmp.append(1.0)
     wOutput.append(tmp)
-    biasOutput.append(random.uniform(-1, 1))
+    biasOutput.append(1.0)
 wHidden=np.asarray(wHidden)
 wOutput=np.asarray(wOutput)
 
@@ -214,16 +285,30 @@ for i in range(hiddenNode):
 deltaWHidden=np.asarray(deltaWHidden)
 deltaBiasHidden=np.asarray(deltaBiasHidden)
 
-for i in range(100):
+epoch=[1000]
+acc=[]
+for k in range(epoch.__len__()):
 
-    x = feedfoward(input, wHidden, biasHidden, hiddenNode)
-    y = feedfoward(x, wOutput, biasOutput, outputNode)
-    print(y[0])
-    err = dOutput - y
+    for j in range(epoch[k]):
+        tmp=0
+        for i in range(input.__len__()):
 
-    wOutputOld, gradientOutput, deltaWOutput, deltaBiasOutput = outputBPG(
-        err, wOutput, biasOutput, deltaWOutput,deltaBiasOutput)
+            x = feedfoward(input[i], wHidden, biasHidden, hiddenNode)
+            y = feedfoward(x, wOutput, biasOutput, outputNode)
 
-    wHiddenOld, gradientHidden, deltaWHidden, deltaBiasHidden = hiddenBPG(
-        gradientOutput, wHidden, biasHidden,deltaWHidden, deltaBiasHidden)
 
+
+            # tmp+=cross_acc(y,dOutput[i]) # uncomment if use cross_pat
+
+            tmp+=flood_acc(y,dOutput[i]) # uncomment if use flood data set
+
+            err = dOutput[i] - y
+
+            wOutput, wHidden, deltaWOutput, deltaWHidden = bpg(
+                err,wOutput,deltaWOutput,deltaBiasOutput,wHidden,deltaWHidden,deltaBiasHidden,input[i])
+
+        # show accuracy
+        print(j,tmp,"/",input.__len__(),end=" = ")
+        acc.append(tmp/input.__len__())
+        print(acc[-1])
+print("ACC = ",acc[0],acc[-1]) # show accuracy between first and last epoch
