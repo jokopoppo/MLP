@@ -1,8 +1,9 @@
 #Multi Layer Perceptron
-
+from numpy import *
 import numpy as np
 import math
 import random
+import matplotlib.pyplot as plt
 
 def activationFunc(v):
 
@@ -160,12 +161,16 @@ def flood_data():
     tmp = []
 
     for i in range(lines.__len__()):
-        if (tmp.__len__() == 8):
+        tmp.append(lines[i])
+
+        if (tmp.__len__() == 9):
             input.append(tmp)
             tmp = []
-            dOutput.append(lines[i])
-        else:
-            tmp.append(lines[i])
+
+    random.shuffle(input)
+
+    for i in range(input.__len__()):
+        dOutput.append(input[i].pop())
 
     input = np.asarray(input)
     dOutput = np.asarray(dOutput)
@@ -221,94 +226,128 @@ def cross_acc(y,dOutput):
     else:
         return 0
 
-alpha=0.1
+alpha=0.5
 lr=0.1
 layers=2
 hiddenNode=3
-wHidden=[]
-wOutput=[]
-biasHidden=[]
-biasOutput=[]
+# input,dOutput , outputNode = cross_pat()
+inputRaw,dOutputRaw , outputNode = cross_pat()
 
-input,dOutput , outputNode = flood_data()
+dOutputRaw= dOutputRaw.reshape(inputRaw.__len__(),outputNode)
+print("input :",inputRaw.shape)
+print("output :",dOutputRaw.shape)
 
-# dOutput= dOutput.reshape(input.__len__(),outputNode)
-print("input :",input.shape)
-print("output :",dOutput.shape)
+accall=[]
+for n in range(10):
+    wHidden = []
+    wOutput = []
+    biasHidden = []
+    biasOutput = []
 
-tmp=[]
-for i in range(hiddenNode):
     tmp=[]
-    for j in range(input[0].__len__()):
-        tmp.append(1.0)
-    wHidden.append(tmp)
-    biasHidden.append(1.0)
+    for i in range(hiddenNode):
+        tmp=[]
+        for j in range(inputRaw[0].__len__()):
+            tmp.append(random.uniform(-1,1))
+        wHidden.append(tmp)
+        biasHidden.append(random.uniform(-1,1))
 
-print("HiddenNode :",wHidden.__len__())
-print("BiasHiddenNode :",biasHidden.__len__())
+    # print("HiddenNode :",wHidden.__len__())
+    # print("BiasHiddenNode :",biasHidden.__len__())
 
-for i in range(outputNode):
-    tmp=[]
-    for j in range(hiddenNode):
-        tmp.append(1.0)
-    wOutput.append(tmp)
-    biasOutput.append(1.0)
-wHidden=np.asarray(wHidden)
-wOutput=np.asarray(wOutput)
+    for i in range(outputNode):
+        tmp=[]
+        for j in range(hiddenNode):
+            tmp.append(random.uniform(-1,1))
+        wOutput.append(tmp)
+        biasOutput.append(random.uniform(-1,1))
+    wHidden=np.asarray(wHidden)
+    wOutput=np.asarray(wOutput)
 
-print("OutputNode :",wOutput.__len__())
-print("BiasOutputNode :",biasOutput.__len__())
+    # print("OutputNode :",wOutput.__len__())
+    # print("BiasOutputNode :",biasOutput.__len__())
 
-deltaWOutput=[]
-deltaBiasOutput=[]
+    # train set validation set test set
+    percent = int((inputRaw.__len__())*(10/100))
 
-for i in range(outputNode):
-    tmp=[]
-    for j in range(hiddenNode):
-        tmp.append(0.0)
-    deltaWOutput.append(tmp)
-    deltaBiasOutput.append(0.0)
+    inputTest = inputRaw[n*percent:percent*(n+1)]
+    dOutputTest = dOutputRaw[n*percent:percent*(n+1)]
 
-deltaWOutput=np.asarray(deltaWOutput)
-deltaBiasOutput=np.asarray(deltaBiasOutput)
+    input = concatenate((inputRaw[0:n * percent],inputRaw[percent * (n + 1):-1]),axis=0)
+    dOutput = concatenate((dOutputRaw[0:n * percent],dOutputRaw[percent * (n + 1):-1]),axis=0)
 
-deltaWHidden = []
-deltaBiasHidden = []
+    deltaWOutput=[]
+    deltaBiasOutput=[]
 
-for i in range(hiddenNode):
-    tmp=[]
-    for j in range(input[0].__len__()):
-        tmp.append(0.0)
-    deltaWHidden.append(tmp)
-    deltaBiasHidden.append(0.0)
+    for i in range(outputNode):
+        tmp=[]
+        for j in range(hiddenNode):
+            tmp.append(0.0)
+        deltaWOutput.append(tmp)
+        deltaBiasOutput.append(0.0)
 
-deltaWHidden=np.asarray(deltaWHidden)
-deltaBiasHidden=np.asarray(deltaBiasHidden)
+    deltaWOutput=np.asarray(deltaWOutput)
+    deltaBiasOutput=np.asarray(deltaBiasOutput)
 
-epoch=[1000]
-acc=[]
-for k in range(epoch.__len__()):
+    deltaWHidden = []
+    deltaBiasHidden = []
 
-    for j in range(epoch[k]):
-        tmp=0
-        for i in range(input.__len__()):
+    for i in range(hiddenNode):
+        tmp=[]
+        for j in range(input[0].__len__()):
+            tmp.append(0.0)
+        deltaWHidden.append(tmp)
+        deltaBiasHidden.append(0.0)
 
-            x = feedfoward(input[i], wHidden, biasHidden, hiddenNode)
-            y = feedfoward(x, wOutput, biasOutput, outputNode)
+    deltaWHidden=np.asarray(deltaWHidden)
+    deltaBiasHidden=np.asarray(deltaBiasHidden)
 
+    epoch=[100]
+    acc=[]
+    for k in range(epoch.__len__()):
 
+        for j in range(epoch[k]):
+            tmp=0
+            for i in range(input.__len__()):
 
-            # tmp+=cross_acc(y,dOutput[i]) # uncomment if use cross_pat
+                x = feedfoward(input[i], wHidden, biasHidden, hiddenNode)
+                y = feedfoward(x, wOutput, biasOutput, outputNode)
 
-            tmp+=flood_acc(y,dOutput[i]) # uncomment if use flood data set
+                tmp+=cross_acc(y,dOutput[i]) # uncomment if use cross_pat
 
-            err = dOutput[i] - y
+                # tmp+=flood_acc(y,dOutput[i]) # uncomment if use flood data set
 
-            wOutput, wHidden, deltaWOutput, deltaWHidden = bpg(
-                err,wOutput,deltaWOutput,deltaBiasOutput,wHidden,deltaWHidden,deltaBiasHidden,input[i])
+                err = dOutput[i] - y
 
-        # show accuracy
-        print(j,tmp,"/",input.__len__(),end=" = ")
-        acc.append(tmp/input.__len__())
-        print(acc[-1])
-print("ACC = ",acc[0],acc[-1]) # show accuracy between first and last epoch
+                wOutput, wHidden, deltaWOutput, deltaWHidden = bpg(
+                    err,wOutput,deltaWOutput,deltaBiasOutput,wHidden,deltaWHidden,deltaBiasHidden,input[i])
+
+            # show accuracy
+            # print(j,tmp,"/",input.__len__(),end=" = ")
+            acc.append(tmp/input.__len__())
+            # print(acc[-1])
+    acc=asarray(acc)
+    tmp=acc.argmin(axis=0)
+    print(n,"ACC = ",acc[0],acc[-1],acc[tmp],tmp) # show accuracy between first and last epoch
+
+    # t = np.arange(0,epoch[0])
+    # plt.plot(t, acc, 'r') # plotting t, a separately
+    # plt.show()
+
+    # Test The Model
+    err=0
+
+    for i in range(inputTest.__len__()):
+        x = feedfoward(inputTest[i], wHidden, biasHidden, hiddenNode)
+        y = feedfoward(x, wOutput, biasOutput, outputNode)
+
+        # err += flood_acc(y, dOutputTest[i])
+        err += cross_acc(y, dOutputTest[i])
+
+    # print("ERR = ",err) # for flood
+
+    err=err/inputTest.__len__() # for cross
+    print("ACC = ",err) # for cross
+    accall.append(err)
+# print("Over All Error = ",sum(accall)/accall.__len__()) # for flood
+print("Over All Accuracy = ",sum(accall)/accall.__len__()) # for cross
