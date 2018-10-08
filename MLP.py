@@ -18,8 +18,8 @@ def dActivationfuction(y):
 def preprocess(data):
     max = np.max(data, axis=0)
     min = np.min(data, axis=0)
-    # print(max)
-    # print(min)
+    print(max)
+    print(min)
     length=max-min
 
     for i in range(data.__len__()):
@@ -226,11 +226,10 @@ def cross_acc(y,dOutput):
     else:
         return 0
 
-alpha=0.5
-lr=0.1
+alpha=0.1
+lr=0.5
 layers=2
-hiddenNode=3
-# input,dOutput , outputNode = cross_pat()
+hiddenNode=8
 inputRaw,dOutputRaw , outputNode = cross_pat()
 
 dOutputRaw= dOutputRaw.reshape(inputRaw.__len__(),outputNode)
@@ -302,7 +301,7 @@ for n in range(10):
     deltaWHidden=np.asarray(deltaWHidden)
     deltaBiasHidden=np.asarray(deltaBiasHidden)
 
-    epoch=[100]
+    epoch=[300]
     acc=[]
     for k in range(epoch.__len__()):
 
@@ -327,12 +326,9 @@ for n in range(10):
             acc.append(tmp/input.__len__())
             # print(acc[-1])
     acc=asarray(acc)
-    tmp=acc.argmin(axis=0)
-    print(n,"ACC = ",acc[0],acc[-1],acc[tmp],tmp) # show accuracy between first and last epoch
-
-    # t = np.arange(0,epoch[0])
-    # plt.plot(t, acc, 'r') # plotting t, a separately
-    # plt.show()
+    tmp=acc.argmax(axis=0)
+    # print(n,"fold ,ERROR = ",acc[tmp]) # show error for flood
+    # print(n,"ACC = ",acc[tmp]) # show accuracy for cross
 
     # Test The Model
     err=0
@@ -347,7 +343,7 @@ for n in range(10):
     # print("ERR = ",err) # for flood
 
     err=err/inputTest.__len__() # for cross
-    print("ACC = ",err) # for cross
+    print(n,"fold ACCURACY = ",err) # for cross
     accall.append(err)
 # print("Over All Error = ",sum(accall)/accall.__len__()) # for flood
 print("Over All Accuracy = ",sum(accall)/accall.__len__()) # for cross

@@ -4,8 +4,6 @@
     <list default="true" id="ce73786f-2e28-4841-a8f0-abc86cb150df" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MLP.py" beforeDir="false" afterPath="$PROJECT_DIR$/MLP.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/pip-selfcheck.json" beforeDir="false" afterPath="$PROJECT_DIR$/venv/pip-selfcheck.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,7 +52,7 @@
     <session id="88733753">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="14" />
+          <entry key="project.closed" value="15" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.18" value="1" />
@@ -66,20 +64,21 @@
           <entry key="project.open.time.24" value="1" />
           <entry key="project.open.time.26" value="1" />
           <entry key="project.open.time.27" value="1" />
+          <entry key="project.open.time.35" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="17" />
+          <entry key="project.opened" value="18" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="9149" />
+          <entry key="py" value="9319" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="9149" />
+          <entry key="Python" value="9319" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -105,22 +104,21 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MLP.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="111">
-              <caret line="305" column="10" lean-forward="true" selection-start-line="305" selection-start-column="10" selection-end-line="305" selection-end-column="10" />
+            <state relative-caret-position="85">
+              <caret line="13" column="26" lean-forward="true" selection-end-line="349" />
               <folding>
-                <element signature="e#24#43#0" expanded="true" />
-                <element signature="e#99#139#0" />
-                <element signature="e#172#200#0" />
-                <element signature="e#228#429#0" />
-                <element signature="e#463#503#0" />
-                <element signature="e#544#944#0" />
-                <element signature="e#995#1570#0" />
-                <element signature="e#1631#2611#0" />
-                <element signature="e#2712#4014#0" />
-                <element signature="e#4089#4647#0" />
-                <element signature="e#5187#5245#0" />
-                <element signature="e#5278#5450#0" />
-                <marker date="1538902159141" expanded="true" signature="5373:5553" ph="..." />
+                <element signature="e#150#190#0" />
+                <element signature="e#279#480#0" />
+                <element signature="e#514#554#0" />
+                <element signature="e#595#995#0" />
+                <element signature="e#1046#1621#0" />
+                <element signature="e#1682#2662#0" />
+                <element signature="e#2763#4065#0" />
+                <element signature="e#4089#4659#0" />
+                <element signature="e#4682#5256#0" />
+                <element signature="e#5288#5346#0" />
+                <element signature="e#5379#5551#0" />
+                <marker date="1538988481366" expanded="true" signature="5369:5549" ph="..." />
               </folding>
             </state>
           </provider>
@@ -157,6 +155,8 @@
     <findStrings>
       <find>random</find>
       <find>flood</find>
+      <find>cross</find>
+      <find>1.</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -303,14 +303,14 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3291815" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49920508" visible="true" weight="0.34875444" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39679715" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3291815" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3291815" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3291815" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5007949" side_tool="true" weight="0.34341636" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -359,22 +359,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MLP.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="305" column="10" lean-forward="true" selection-start-line="305" selection-start-column="10" selection-end-line="305" selection-end-column="10" />
+        <state relative-caret-position="85">
+          <caret line="13" column="26" lean-forward="true" selection-end-line="349" />
           <folding>
-            <element signature="e#24#43#0" expanded="true" />
-            <element signature="e#99#139#0" />
-            <element signature="e#172#200#0" />
-            <element signature="e#228#429#0" />
-            <element signature="e#463#503#0" />
-            <element signature="e#544#944#0" />
-            <element signature="e#995#1570#0" />
-            <element signature="e#1631#2611#0" />
-            <element signature="e#2712#4014#0" />
-            <element signature="e#4089#4647#0" />
-            <element signature="e#5187#5245#0" />
-            <element signature="e#5278#5450#0" />
-            <marker date="1538902159141" expanded="true" signature="5373:5553" ph="..." />
+            <element signature="e#150#190#0" />
+            <element signature="e#279#480#0" />
+            <element signature="e#514#554#0" />
+            <element signature="e#595#995#0" />
+            <element signature="e#1046#1621#0" />
+            <element signature="e#1682#2662#0" />
+            <element signature="e#2763#4065#0" />
+            <element signature="e#4089#4659#0" />
+            <element signature="e#4682#5256#0" />
+            <element signature="e#5288#5346#0" />
+            <element signature="e#5379#5551#0" />
+            <marker date="1538988481366" expanded="true" signature="5369:5549" ph="..." />
           </folding>
         </state>
       </provider>
